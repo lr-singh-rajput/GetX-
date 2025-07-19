@@ -325,13 +325,56 @@ final pages = [
 # 4. Navigation (Commands)
 
 ## 📤 Send Data:
-dart
-Copy code
+
 Get.to(ProfilePage(), arguments: userData);
 ## 📥 Receive:
-dart
-Copy code
 final user = Get.arguments;
 
 
 # ⚙️ 5. Get.put vs Get.lazyPut vs Get.putAsync
+| Method           | When to Use                           | Creates Instance |
+| ---------------- | ------------------------------------- | ---------------- |
+| `Get.put()`      | Immediately                           | Yes              |
+| `Get.lazyPut()`  | Only when used first time (lazy load) | No (until used)  |
+| `Get.putAsync()` | When controller is async initialized  | Future           |
+# 
+
+# Example:
+Get.put(AuthController());           // eager
+Get.lazyPut(() => ProfileController()); // lazy
+Get.putAsync(() async => await MyService().init());
+
+
+
+# Real Tips & Notes
+Use Bindings for each page to avoid memory leaks.
+
+Prefer lazyPut unless you need controller immediately.
+
+Organize project via feature-wise folders.
+
+Always clear TextControllers in onClose().
+
+Use Get.snackbar for error/info popups.
+
+Use Rx<T> or .obs for reactive variables.
+
+
+| Widget         | Purpose                             |
+| -------------- | ----------------------------------- |
+| Obx            | Reactively rebuilds UI              |
+| GetBuilder     | Rebuilds based on controller state  |
+| GetMaterialApp | Needed for routing, snackbars, etc. |
+| GetPage        | Route configuration                 |
+
+
+
+# 🔁 Example Flow – Send Data to 2nd Page
+## On HomePage:
+
+Get.to(ProfilePage(), arguments: {'id': 1, 'name': 'Rudra'});
+## On ProfilePage:
+
+final data = Get.arguments;
+print(data['name']); // Rudra
+
